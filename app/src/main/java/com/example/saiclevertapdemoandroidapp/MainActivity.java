@@ -2,6 +2,7 @@ package com.example.saiclevertapdemoandroidapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +11,6 @@ import android.widget.Toast;
 
 import com.clevertap.android.sdk.CleverTapAPI;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     // 1. Creating Variables for the text field and signup button and CleverTap API
 
     EditText email,phone,name,username,address;
-    Button SignUp;
+    Button SignUp, skip;
     CleverTapAPI clevertapDefaultInstance;
 
 
@@ -32,10 +32,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //12. This below code will help with the logs for debugging, these can be viewed below in logcat
+        CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.DEBUG);   //Set Log level to DEBUG log warnings or other important messages
+
+
+
         // 0. Below we are Initializing the CleverTap SDK
         // CleverTapAPI clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         // This is the API that we get from CleverTap
-
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
         // 2. Now initializing the above variables, we use findviewbyid to find a particular view and we will get all the views
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.text_user_name);
         address = findViewById(R.id.text_address);
         SignUp = findViewById(R.id.button_signup);
+        skip = findViewById(R.id.button_skip);
 
 
         // 3. Now we put a Setoncliclistener on the signup button, when the button is clicked, then the
@@ -96,10 +102,35 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "SignUp Successful" , Toast.LENGTH_LONG).show();
 
 
+              //12. After the user is signed up the goToHome function is called and the user is taken to the new activity [HomePage]
+
+                goToHome();
+
 
 
             }
         });
 
+
+        // 9. Now we put a Setoncliclistener on the skip button, when the skip button is clicked, OnClick Method is called
+        // then the goToHome Function is executed and the user is taken to the sign in / home page
+        skip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //11. GoToHome function is used for taking the user to new activty [Home Page]
+                goToHome();
+            }
+        });
+
+
+
+    }
+
+    private void goToHome() {
+        //10. Intent is used for inter activity communication / navigating from one activity to another
+        // Below [MainActivity.this] is the exiting activity and [HomeActivity.class] is the target activity
+        // startActivity(intent) will start this activity and go to the target activity
+        Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+        startActivity(intent);
     }
 }
