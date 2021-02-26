@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.clevertap.android.sdk.CTInboxListener;
+import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
 
 import java.util.ArrayList;
@@ -149,14 +150,6 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
 
 
 
-
-        AppInbox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         Other.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,15 +160,52 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
 
     }
 
-    
+
 
     //19.This is used for the AppInbox Messages Callback Functions
     // We implemented the CTInboxListener on the top [HomeActivityClass]
+    // We define the Inbox tabs and its style configuration
 
     @Override
     public void inboxDidInitialize() {
 
+
+  //20. We define the AppInnbox onlicklistner inside the InboxDidInilialize, because when the inbox initializes then the AppInbox Button gets activated
+        // and when we click it will take us to the inbox.
+        AppInbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                //We can only show 2 tabs in the inbox
+                ArrayList<String> tabs = new ArrayList<>();
+                tabs.add("promotions");
+                tabs.add("offers");
+
+                CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
+                styleConfig.setTabs(tabs); //Do not use this if you don't want to use tabs
+
+                styleConfig.setTabBackgroundColor("#FF0000");//provide Hex code in string ONLY
+                styleConfig.setSelectedTabIndicatorColor("#0000FF");
+                styleConfig.setSelectedTabColor("#000000");
+                styleConfig.setUnselectedTabColor("#FFFFFF");
+                styleConfig.setBackButtonColor("#FF0000");
+                styleConfig.setNavBarTitleColor("#FF0000");
+                styleConfig.setNavBarTitle("MY INBOX");
+                styleConfig.setNavBarColor("#FFFFFF");
+                styleConfig.setInboxBackgroundColor("#00FF00");
+                clevertapDefaultInstance.showAppInbox(styleConfig); //Opens activity tith Tabs
+
+
+            }
+        });
+
+
+
     }
+
+
+
 
     @Override
     public void inboxMessagesDidUpdate() {
