@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.clevertap.android.sdk.CTInboxListener;
 import com.clevertap.android.sdk.CleverTapAPI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements CTInboxListener {
 
     //13. Creating Buttons for the HomeActivity Page
     Button UpdateProfile,AddToCart,ProductView,Charge,AppInbox,Other;
@@ -26,6 +28,13 @@ public class HomeActivity extends AppCompatActivity {
 
         //Initialize the CleverTap SDK for this Page
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+
+
+        //20.Initializing the In app notification Listner
+        //Set the Notification Inbox Listener
+        clevertapDefaultInstance.setCTNotificationInboxListener(this);
+        //Initialize the inbox and wait for callbacks on overridden methods
+        clevertapDefaultInstance.initializeInbox();
 
 
         //14. First Here we find the view for all the buttons in the HomePage [HomeActivity.java]
@@ -59,30 +68,86 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        AddToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-
         ProductView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                // 17. We can raise a event with properties,and we push the event product viewed
+
+                HashMap<String, Object> prodViewedAction = new HashMap<String, Object>();
+                prodViewedAction.put("Product Name", "Casio Chronograph Watch");
+                prodViewedAction.put("Category", "Mens Accessories");
+                prodViewedAction.put("Price", 59.99);
+                prodViewedAction.put("Date", new java.util.Date());
+
+                clevertapDefaultInstance.pushEvent("Product viewed", prodViewedAction);
+
+
+
             }
         });
 
 
+        //Here the product that is viewed that is added to the cart
+        AddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                HashMap<String, Object> prodViewedAction = new HashMap<String, Object>();
+                prodViewedAction.put("Product Name", "Casio Chronograph Watch");
+                prodViewedAction.put("Category", "Mens Accessories");
+                prodViewedAction.put("Price", 59.99);
+                prodViewedAction.put("Date", new java.util.Date());
+
+                clevertapDefaultInstance.pushEvent("Add To Cart", prodViewedAction);
+
+            }
+        });
+
+
+        // 18. Charged is a special event, where there can be more than 1 product in the Cart
+        // we store the Charged Details in a hashmap, which includes ChargeDetails such as amount, payment mode, charged id [Transaction id]
+        // We also store individual product information the hashmap and then we add them in a Arraylist
+        // then push the event to clevertap
 
         Charge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                HashMap<String, Object> chargeDetails = new HashMap<String, Object>();
+                chargeDetails.put("Amount", 300);
+                chargeDetails.put("Payment Mode", "Credit card");
+                chargeDetails.put("Charged ID", 24052013);
+
+                HashMap<String, Object> item1 = new HashMap<String, Object>();
+                item1.put("Product category", "books");
+                item1.put("Book name", "The Millionaire next door");
+                item1.put("Quantity", 1);
+
+                HashMap<String, Object> item2 = new HashMap<String, Object>();
+                item2.put("Product category", "books");
+                item2.put("Book name", "Achieving inner zen");
+                item2.put("Quantity", 1);
+
+                HashMap<String, Object> item3 = new HashMap<String, Object>();
+                item3.put("Product category", "books");
+                item3.put("Book name", "Chuck it, let's do it");
+                item3.put("Quantity", 5);
+
+                ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+                items.add(item1);
+                items.add(item2);
+                items.add(item3);
+
+                clevertapDefaultInstance.pushChargedEvent(chargeDetails, items);
+
+
+
             }
         });
+
+
 
 
         AppInbox.setOnClickListener(new View.OnClickListener() {
@@ -100,12 +165,21 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
+    }
 
+    
 
+    //19.This is used for the AppInbox Messages Callback Functions
+    // We implemented the CTInboxListener on the top [HomeActivityClass]
+
+    @Override
+    public void inboxDidInitialize() {
 
     }
 
+    @Override
+    public void inboxMessagesDidUpdate() {
 
-
+    }
 }
 
