@@ -16,7 +16,7 @@
 
 
 
-        // 23.Deep Link Activity, deep link is used to take user directly to a app from the url and
+        // 24.Deep Link Activity, deep link is used to take user directly to a app from the url and
         <activity android:name=".DeepLinkActivity">
 
             // we can also specify to which activity the user should land after the app is opened

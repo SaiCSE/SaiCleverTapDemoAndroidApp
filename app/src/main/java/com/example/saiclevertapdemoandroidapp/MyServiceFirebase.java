@@ -14,7 +14,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-//21. This service class is used to send and get data from firebase
+//22. This service class is used to send and get data from firebase
 
 public class MyServiceFirebase extends FirebaseMessagingService {
 

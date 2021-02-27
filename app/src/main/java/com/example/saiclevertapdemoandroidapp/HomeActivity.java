@@ -31,7 +31,7 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
 
-        //20.Initializing the In app notification Listner
+        //21.Initializing the In app notification Listner
         //Set the Notification Inbox Listener
         clevertapDefaultInstance.setCTNotificationInboxListener(this);
         //Initialize the inbox and wait for callbacks on overridden methods

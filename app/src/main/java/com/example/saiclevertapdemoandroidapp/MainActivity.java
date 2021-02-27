@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,13 +21,13 @@ public class MainActivity extends AppCompatActivity {
 
     // 1. Creating Variables for the text field and signup button and CleverTap API
 
-    EditText email,phone,name,username,address;
+    EditText email, phone, name, username, address;
     Button SignUp, skip;
     CleverTapAPI clevertapDefaultInstance;
 
 
     //4. As the data we enter in the fields will be a String, we create String Variables
-    String textEmail,textPhone,textName,textUsername,textAddress;
+    String textEmail, textPhone, textName, textUsername, textAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,19 +39,34 @@ public class MainActivity extends AppCompatActivity {
         CleverTapAPI.setDebugLevel(CleverTapAPI.LogLevel.DEBUG);   //Set Log level to DEBUG log warnings or other important messages
 
 
-
         // 0. Below we are Initializing the CleverTap SDK
         // CleverTapAPI clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         // This is the API that we get from CleverTap
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
 
-        //22. PushNotification Channel Service, from Android 8.0 We need to create a notification channel through which the priority of the notifications can be set.
-         // Creating a Notification Channel With Sound Support. here we have channel id [important], channelName and Channel Description [Keep something relevant]
-        //While sending the push from CleverTap dashboard, we need to put the channelid = "st" , here so tha notification is sent
-        CleverTapAPI.createNotificationChannel(getApplicationContext(),"st",
-                "Stranger Things","Stranger Things",NotificationManager.IMPORTANCE_MAX,true,"strangerthings_theme.mp3");
 
+        //25. Action Buttons in the push notifications, the below code will give us the information on which button was clicked by giving us the [action id]
+        // As the below code is in OnCreateMethod, this gets executed with it and when we click on the notification button when the app is running we dont get the button id toast message
+        // But if App is in close mode or is not opened, and then when we click on the notification, we get the action id as toast message.
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String actionId = extras.getString("actionId");
+            if (actionId != null) {
+                Log.d("ACTION_ID", actionId);
+                Toast.makeText(getBaseContext(),"Action ID is: "+actionId,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+        //23. PushNotification Channel Service, from Android 8.0 We need to create a notification channel through which the priority of the notifications can be set.
+        // Creating a Notification Channel With Sound Support. here we have channel id [important], channelName and Channel Description [Keep something relevant]
+        //While sending the push from CleverTap dashboard, we need to put the channelid = "st" , here so tha notification is sent
+        CleverTapAPI.createNotificationChannel(getApplicationContext(), "st",
+                "Stranger Things", "Stranger Things", NotificationManager.IMPORTANCE_MAX, true, "strangerthings_theme.mp3");
 
 
         // 2. Now initializing the above variables, we use findviewbyid to find a particular view and we will get all the views
@@ -70,17 +86,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-         //5. We use the string variables, here to read the data and send it to the CleverTap API [Post Request]
+                //5. We use the string variables, here to read the data and send it to the CleverTap API [Post Request]
 
-         textEmail = email.getText().toString();
-         textPhone = phone.getText().toString();
-         textName  = name.getText().toString();
-         textUsername = username.getText().toString();
-         textAddress = address.getText().toString();
+                textEmail = email.getText().toString();
+                textPhone = phone.getText().toString();
+                textName = name.getText().toString();
+                textUsername = username.getText().toString();
+                textAddress = address.getText().toString();
 
 
-         // 6. We can add information to userProfile [OnUserLogin] Data
-         // We use a hashmap to store the data
+                // 6. We can add information to userProfile [OnUserLogin] Data
+                // We use a hashmap to store the data
 
                 // each of the below mentioned fields are optional if set, these populate demographic information in the Dashboard
 
@@ -104,17 +120,16 @@ public class MainActivity extends AppCompatActivity {
                 profileUpdate.put("MSG-dndEmail", true);                  // Opt out phone                                                                    number from SMS                                                                  notifications
 
 
-               // 7. We use the CleverTap Default Instance to push the profile
-               clevertapDefaultInstance.pushProfile(profileUpdate);
+                // 7. We use the CleverTap Default Instance to push the profile
+                clevertapDefaultInstance.pushProfile(profileUpdate);
 
-               //8. Giving the User a Message after clicking the button, via a Toast Method
-                Toast.makeText(MainActivity.this, "SignUp Successful" , Toast.LENGTH_LONG).show();
+                //8. Giving the User a Message after clicking the button, via a Toast Method
+                Toast.makeText(MainActivity.this, "SignUp Successful", Toast.LENGTH_LONG).show();
 
 
-              //12. After the user is signed up the goToHome function is called and the user is taken to the new activity [HomePage]
+                //12. After the user is signed up the goToHome function is called and the user is taken to the new activity [HomePage]
 
                 goToHome();
-
 
 
             }
@@ -132,14 +147,37 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     private void goToHome() {
         //10. Intent is used for inter activity communication / navigating from one activity to another
         // Below [MainActivity.this] is the exiting activity and [HomeActivity.class] is the target activity
         // startActivity(intent) will start this activity and go to the target activity
-        Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
     }
+
+
+//     26. So, when the app is running even in the background [which means the OnCreateMethod is already called], we can still get the Button type [Action id]
+//     within the app, with the help of OnNewIntent method
+//     if the App is closed and we click on the button, we dont get the toast message, we have click on the notification button again to get the action id
+//     So we need to have the below code Bundle in both OnCreate and onNewIntent method to get the action id, everytime.
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String actionId = extras.getString("actionId");
+            if (actionId != null) {
+                Log.d("ACTION_ID", actionId);
+                Toast.makeText(getBaseContext(), "Action ID is: " + actionId,
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+
 }
