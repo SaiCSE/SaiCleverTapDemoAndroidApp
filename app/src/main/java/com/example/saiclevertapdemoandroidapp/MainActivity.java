@@ -3,6 +3,7 @@ package com.example.saiclevertapdemoandroidapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
 
 
+        //28. CleverTap Profile Customization, this enables the personalised experience tp the app users
+        // We will create a personalized experience demo [Profile push] on the other button in the HomeActivity file
+        clevertapDefaultInstance.enablePersonalization();
+
+
+
 
         //25. Action Buttons in the push notifications, the below code will give us the information on which button was clicked by giving us the [action id]
         // As the below code is in OnCreateMethod, this gets executed with it and when we click on the notification button when the app is running we dont get the button id toast message
@@ -55,6 +62,16 @@ public class MainActivity extends AppCompatActivity {
             String actionId = extras.getString("actionId");
             if (actionId != null) {
                 Log.d("ACTION_ID", actionId);
+
+                //This below code vanishes/closes the notificaion once the button is clicked
+                boolean autoCancel = extras.getBoolean("autoCancel", true);
+                int notificationId = extras.getInt("notificationId", -1);
+                if (autoCancel && notificationId > -1) {
+                    NotificationManager notifyMgr =
+                            (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notifyMgr.cancel(notificationId);  // the bit that cancels the notification
+                }
+
                 Toast.makeText(getBaseContext(),"Action ID is: "+actionId,
                         Toast.LENGTH_SHORT).show();
             }
@@ -172,6 +189,17 @@ public class MainActivity extends AppCompatActivity {
             String actionId = extras.getString("actionId");
             if (actionId != null) {
                 Log.d("ACTION_ID", actionId);
+
+                //This below code vanishes/closes the notificaion once the button is clicked
+                boolean autoCancel = extras.getBoolean("autoCancel", true);
+                int notificationId = extras.getInt("notificationId", -1);
+                if (autoCancel && notificationId > -1) {
+                    NotificationManager notifyMgr =
+                            (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notifyMgr.cancel(notificationId);  // the bit that cancels the notification
+                }
+
+                //The below code gives us the toast message
                 Toast.makeText(getBaseContext(), "Action ID is: " + actionId,
                         Toast.LENGTH_SHORT).show();
             }
@@ -179,5 +207,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    //27. We can enable Push Impressions also known as Notification viewed in the analytics report
+    //by going to settings < schema < events < push impressions < click on 3 dots < enable push impressions
+    // this way we can see how many times our notification is viewed
 
 }

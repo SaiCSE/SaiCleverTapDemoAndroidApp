@@ -67,5 +67,16 @@
         app:layout_constraintStart_toStartOf="@+id/App_Inbox"
         app:layout_constraintTop_toBottomOf="@+id/App_Inbox" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="65dp"
+        android:layout_height="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/Other"
+        app:layout_constraintHorizontal_bias="0.434"
+        app:layout_constraintStart_toStartOf="@+id/Other"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.774" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

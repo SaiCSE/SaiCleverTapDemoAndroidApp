@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.clevertap.android.sdk.CTInboxListener;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
@@ -20,6 +21,7 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
     //13. Creating Buttons for the HomeActivity Page
     Button UpdateProfile,AddToCart,ProductView,Charge,AppInbox,Other;
     CleverTapAPI clevertapDefaultInstance;
+    TextView textView;
 
 
     @Override
@@ -45,6 +47,13 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
         Charge = findViewById(R.id.charged);
         AppInbox = findViewById(R.id.App_Inbox);
         Other = findViewById(R.id.Other);
+        textView = findViewById(R.id.textView);
+
+        //30.This will give us the Customer_type, here which is given as gold in the other button onclick method.
+        //We get the customer_type and then pass it on to the textView in the home activity xml file / home activity app page
+        String customerType = (String) clevertapDefaultInstance.getProperty("Customer_type");
+        textView.setText(customerType);
+
 
 
 
@@ -150,9 +159,13 @@ public class HomeActivity extends AppCompatActivity implements CTInboxListener {
 
 
 
+        //29. Here we will do a personalised profile push
         Other.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
+                profileUpdate.put("Customer_type", "Gold");
+                clevertapDefaultInstance.pushProfile(profileUpdate);
 
             }
         });
