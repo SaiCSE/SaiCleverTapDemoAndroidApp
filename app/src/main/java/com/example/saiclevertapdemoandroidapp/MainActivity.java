@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 2. Now initializing the above variables, we use findviewbyid to find a particular view and we will get all the views
-
         email = findViewById(R.id.text_email_id);
         phone = findViewById(R.id.text_phone);
         name = findViewById(R.id.text_name);
