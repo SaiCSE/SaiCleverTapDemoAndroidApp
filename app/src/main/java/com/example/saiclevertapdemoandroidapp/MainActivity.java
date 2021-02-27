@@ -2,6 +2,7 @@ package com.example.saiclevertapdemoandroidapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
         // CleverTapAPI clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         // This is the API that we get from CleverTap
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
+
+
+        //22. PushNotification Channel Service, from Android 8.0 We need to create a notification channel through which the priority of the notifications can be set.
+         // Creating a Notification Channel With Sound Support. here we have channel id [important], channelName and Channel Description [Keep something relevant]
+        //While sending the push from CleverTap dashboard, we need to put the channelid = "st" , here so tha notification is sent
+        CleverTapAPI.createNotificationChannel(getApplicationContext(),"st",
+                "Stranger Things","Stranger Things",NotificationManager.IMPORTANCE_MAX,true,"strangerthings_theme.mp3");
+
+
 
         // 2. Now initializing the above variables, we use findviewbyid to find a particular view and we will get all the views
 
