@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //11. GoToHome function is used for taking the user to new activty [Home Page]
+                //11. GoToHome function is used for taking the user to new activity [Home Page]
                 goToHome();
             }
         });

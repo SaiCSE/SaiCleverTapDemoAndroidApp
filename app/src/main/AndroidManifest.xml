@@ -16,11 +16,11 @@
 
 
 
-        // 24.Deep Link Activity, deep link is used to take user directly to a app from the url and
+        <!-- 24.Deep Link Activity, deep link is used to take user directly to a app from the url and -->
         <activity android:name=".DeepLinkActivity">
 
-            // we can also specify to which activity the user should land after the app is opened
-            //The url mentioned below should excatly match with the one we put in the CleverTap Dashboard for the push notification
+            <!-- we can also specify to which activity the user should land after the app is opened
+            //The url mentioned below should excatly match with the one we put in the CleverTap Dashboard for the push notification -->
 
 
             <intent-filter>
@@ -36,7 +36,8 @@
 
 
 
-            //This code will take us to our app
+            <!--This code will take us to our app -->
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -53,7 +54,7 @@
 
 
 
-// This is the Firebase Actvity
+<!-- This is the Firebase Actvity -->
 
         <service
             android:name=".MyServiceFirebase"
@@ -84,7 +85,7 @@
             android:value="1" />
         <meta-data
             android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:value="ic_baseline_email_24.xml" />
+            android:value="ic_baseline_email_24" />
     </application>
 
 </manifest>
